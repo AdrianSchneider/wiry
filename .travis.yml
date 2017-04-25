@@ -6,4 +6,4 @@ node_js:
   - "5"
   - "4"
 script:
-  - "npm run coverage"
+  - "bin/test-ci"
