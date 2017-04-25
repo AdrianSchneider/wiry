@@ -9,8 +9,39 @@ Wiry is an unopinionated dependency injection container for your node or typescr
 
 **Your code should not be aware of Wiry**.
 
-You should have one file, or one layer that deals with configuring the container, but every other class or function should have no knowledge of a container. Classes will not have magic annotations that get processed, or assumptions of how the class will be used. 
+You should have one file, or one layer that deals with configuring the container, but every other class or function should have no knowledge of a container. Classes will not have magic annotations that get processed, or assumptions of how the class will be used.
+
+## Features
+
+- Automatic, async dependency resolution
+- Middleware/behaviours to wrap services
 
 ## Example Usage
 
-...
+For a fully fledged example, check out [qissues](https://github.com/AdrianSchneider/qissues/tree/typescript/src/app/bootstrap).
+
+**Example** (in Typescript)
+
+```typescript
+import { Container } from 'wiry';
+
+const container = new Container();
+
+container.registerService(
+  'service',
+  (db: Database, cache: Cache) => new Service(db, cache),
+  ['db', 'cache']
+);
+
+container.registerService(
+  'db',
+  () => new Database()
+);
+
+container.registerService(
+  'cache',
+  () => new Cache()
+);
+
+return container;
+```
