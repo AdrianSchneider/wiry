@@ -14,34 +14,25 @@ You should have one file, or one layer that deals with configuring the container
 ## Features
 
 - Automatic, async dependency resolution
-- Middleware/behaviours to wrap services
+- Get array of services by pattern (ie `server.controllers.*` as `controllers: Controller[]`)
+- Middleware/behaviours to wrap services (ie cache, etc.)
 
-## Example Usage
+## Usage
 
-For a fully fledged example, check out [qissues](https://github.com/AdrianSchneider/qissues/tree/typescript/src/app/bootstrap).
+At its core, wiry allows you to register and retrieve services, while resolving their dependency trees for you. Services are defined within functions, so they can be fetched lazily and asynchronously. They can be functions, class instances, or any values that can be returned.
 
-**Example** (in Typescript)
+If the service has dependencies, pass it as the 3rd argument with an array of names, and they will be fed into the function for that service.
 
 ```typescript
-import { Container } from 'wiry';
+# invoke function with no args
+container.registerService('number-generator', () => Math.random());
 
-const container = new Container();
-
+# class instance with dependency
 container.registerService(
   'service',
   (db: Database, cache: Cache) => new Service(db, cache),
   ['db', 'cache']
 );
-
-container.registerService(
-  'db',
-  () => new Database()
-);
-
-container.registerService(
-  'cache',
-  () => new Cache()
-);
-
-return container;
 ```
+
+This keeps all of the wiring or dependency resolution out of your classes or code, and isolated to one place. For a fully fledged example, check out [qissues](https://github.com/AdrianSchneider/qissues/tree/typescript/src/app/bootstrap).
