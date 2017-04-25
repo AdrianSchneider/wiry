@@ -41,16 +41,22 @@ container.registerService(
   ['config']
 );
 
-// register cache which depends on config
+// services can be returned with promises as well if they don't lazily connect for you
 container.registerService(
   'cache',
-  new Cache(new RedisCacheBackend(config.CACHE_REDIS_HOST, config.CACHE_REDIS_PORT)),
+  (config) => {
+    const redis = new Redis(config.CACHE_REDIS_HOST, config.CACHE_REDIS_PORT);
+    return redis.connect(connection => {
+      return new Cache(new RedisCacheBackend(redis));
+    });
+  },
   ['config']
 );
 
 // use the service
-const service = container.get('user-management');
-service.createUser(/* ... */);
+return container.get('user-management').then(service => {
+  return service.createUser(/* ... */);
+});
 ```
 
 This keeps all of the wiring or dependency resolution out of your classes or code, and isolated to one place. For a fully fledged example, check out [qissues](https://github.com/AdrianSchneider/qissues/tree/typescript/src/app/bootstrap).
