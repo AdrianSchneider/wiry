@@ -7,6 +7,7 @@
   "scripts": {
     "prepublish": "npm run build",
     "clean": "rm -fr build",
+    "coverage": "./node_modules/.bin/nyc npm t",
     "build": "./node_modules/.bin/tsc -p tsconfig.json",
     "test": "mocha --compilers ts:ts-node/register,tsx:ts-node/register tests"
   },
@@ -36,7 +37,27 @@
     "@types/underscore": "^1.8.0",
     "chai": "^3.5.0",
     "mocha": "^3.3.0",
+    "nyc": "^10.0.0",
     "ts-node": "^3.0.2",
     "typescript": "^2.2.2"
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "typings"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "html",
+      "lcov"
+    ],
+    "all": false
   }
 }
