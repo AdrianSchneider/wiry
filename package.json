@@ -2,17 +2,30 @@
   "name": "wiry",
   "version": "1.0.0",
   "description": "An unopinionated dependency injection framework for node",
-  "main": "index.js",
+  "main": "build/src/index.js",
+  "types": "build/src/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublish": "npm run build",
+    "clean": "rm -fr build",
+    "build": "./node_modules/.bin/tsc -p tsconfig.json",
+    "test": "mocha --compilers ts:ts-node/register,tsx:ts-node/register tests"
   },
   "keywords": [
+    "wiry",
     "ioc",
     "dependency-injection",
     "wiring",
     "container"
   ],
-  "author": "",
+  "author": {
+    "name": "Adrian Schneider",
+    "email": "adrian@compiledintent.com",
+    "url": "http://twitter.com/adrianschneider"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AdrianSchneider/wiry.git"
+  },
   "license": "MIT",
   "dependencies": {
     "underscore": "^1.8.3"
