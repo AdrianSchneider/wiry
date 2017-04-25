@@ -1,6 +1,6 @@
 {
   "name": "wiry",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "An unopinionated dependency injection framework for node",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
