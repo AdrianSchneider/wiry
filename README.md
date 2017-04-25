@@ -24,15 +24,33 @@ At its core, wiry allows you to register and retrieve services, while resolving 
 If the service has dependencies, pass it as the 3rd argument with an array of names, and they will be fed into the function for that service.
 
 ```typescript
-// invoke function with no args
-container.registerService('number-generator', () => Math.random());
-
-// class instance with dependency
+// class instance, depends on 'db' and 'cache'
 container.registerService(
-  'service',
-  (db: Database, cache: Cache) => new Service(db, cache),
+  'user-management',
+  (db: Database, cache: Cache) => new UserManagement(db, cache),
   ['db', 'cache']
 );
+
+// register config
+container.registerService('config' => () => config);
+
+// register database which depends on config
+container.registerService(
+  'db',
+  new Database(config.DB_CONNECTION_STRING),
+  ['config']
+);
+
+// register cache which depends on config
+container.registerService(
+  'cache',
+  new Cache(new RedisCacheBackend(config.CACHE_REDIS_HOST, config.CACHE_REDIS_PORT)),
+  ['config']
+);
+
+// use the service
+const service = container.get('user-management');
+service.createUser(/* ... */);
 ```
 
 This keeps all of the wiring or dependency resolution out of your classes or code, and isolated to one place. For a fully fledged example, check out [qissues](https://github.com/AdrianSchneider/qissues/tree/typescript/src/app/bootstrap).
