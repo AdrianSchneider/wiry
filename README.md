@@ -1,5 +1,8 @@
 # Wiry
 
+[![Build Status](https://travis-ci.org/AdrianSchneider/wiry.svg?branch=master)](https://travis-ci.org/AdrianSchneider/wiry)
+[![Coverage Status](https://coveralls.io/repos/github/AdrianSchneider/wiry/badge.svg?branch=typescript)](https://coveralls.io/github/AdrianSchneider/wiry)
+
 Wiry is an unopinionated dependency injection container for your node or typescript appllication.
 
 ## Design Goals
