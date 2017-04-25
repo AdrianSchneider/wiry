@@ -21,7 +21,7 @@ You should have one file, or one layer that deals with configuring the container
 
 At its core, wiry allows you to register and retrieve services, while resolving their dependency trees for you. Services are defined within functions, so they can be fetched lazily and asynchronously. They can be functions, class instances, or any values that can be returned.
 
-If the service has dependencies, pass it as the 3rd argument with an array of names, and they will be fed into the function for that service.
+If the service has dependencies, pass it as the 3rd argument with an array of names, and they will be fed into the function for that service. Services can be defined in any order; they will be resolved when requested rather than when defined.
 
 ```typescript
 // class instance, depends on 'db' and 'cache'
@@ -32,7 +32,7 @@ container.registerService(
 );
 
 // register config
-container.registerService('config' => () => config);
+container.registerService('config', () => config);
 
 // register database which depends on config
 container.registerService(
