@@ -24,10 +24,10 @@ At its core, wiry allows you to register and retrieve services, while resolving 
 If the service has dependencies, pass it as the 3rd argument with an array of names, and they will be fed into the function for that service.
 
 ```typescript
-# invoke function with no args
+// invoke function with no args
 container.registerService('number-generator', () => Math.random());
 
-# class instance with dependency
+// class instance with dependency
 container.registerService(
   'service',
   (db: Database, cache: Cache) => new Service(db, cache),
