@@ -1,0 +1,7 @@
+node_modules/
+bin/
+src/
+tests/
+coverage/
+.nyc_output/
+*.local
