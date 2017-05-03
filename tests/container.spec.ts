@@ -22,13 +22,13 @@ describe('Container', function() {
     );
   });
 
-  // XXX having issues
-  it.skip('Cannot get an undefined service', async () => {
-    await assert.throws(
-      async () => await container.get('made up'),
-      Error,
-      'made up'
-    );
+  it('Cannot get an undefined service', async () => {
+    try {
+      await container.get('made up');
+      throw new Error('wat');
+    } catch (e) {
+      assert.include(e.message, 'undefined service');
+    }
   });
 
   it('Cannot get an undefined dependency (with more useful error)', () => {
@@ -79,6 +79,23 @@ describe('Container', function() {
       Error,
       'existing'
     );
+  });
+
+  it('Can get groups of services by blogging', async () => {
+    container.registerService('group.a', () => Promise.resolve('a'));
+    container.registerService('group.b', () => Promise.resolve('b'));
+    container.registerService('group.c', () => Promise.resolve('c'));
+    assert.deepEqual(await container.get('group.*'), ['a', 'b', 'c'])
+  });
+
+  it('Failures getting services bubble', async () => {
+    container.registerService('busted', () => Promise.reject(new Error('wat')));
+    try {
+      await container.get('busted');
+      throw new Error('fail');
+    } catch (e) {
+      assert.include(e.message, 'Trouble getting');
+    }
   });
 
 });
