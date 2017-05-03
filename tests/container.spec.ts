@@ -49,18 +49,18 @@ describe('Container', function() {
     assert.equal(await container.get('test'), 5);
   });
 
-  it('Can get multiple services at once', () => {
+  it('Can get multiple services at once', async () => {
     container.registerService('a', () => Promise.resolve('a'));
     container.registerService('b', () => Promise.resolve('b'));
     container.registerService('c', () => Promise.resolve('c'));
 
-    return container.getMatching(['a', 'b', 'c']).then(services => {
-      var [a, b, c] = services;
-      assert.deepEqual([a, b, c], ['a', 'b', 'c']);
-    });
+    assert.deepEqual(
+      await container.getMatching(['a', 'b', 'c']),
+      ['a', 'b', 'c']
+    );
   });
 
-  it('Can decorate services', () => {
+  it('Can decorate services', async () => {
     container.registerService('multiplier', () => (a, b) => a * b);
     container.registerBehaviour(
       'multipliable',
@@ -69,7 +69,7 @@ describe('Container', function() {
     );
 
     container.registerService('four', () => 4, [], <any>{ multipliable: { by: 2 } });
-    return container.get('four').then(num => assert.equal(num, 8));
+    assert.equal(await container.get('four'), 8);
   });
 
   it('Cannot redefine decorators', () => {
