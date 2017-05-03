@@ -1,5 +1,8 @@
 import { once } from 'underscore'
 
+/**
+ * Dependency injection container
+ */
 export default class Container {
   private registered: DefinitionMap = {};
   private behaviours: BehaviourMap = {};
@@ -49,7 +52,7 @@ export default class Container {
       return await this.readyServices[serviceName];
     }
 
-    let service = await this.getServiceFromDefinition(this.registered[serviceName], serviceName);
+    const service = await this.getServiceFromDefinition(this.registered[serviceName], serviceName);
     this.readyServices[serviceName] = service;
     return service;
   }
@@ -70,17 +73,16 @@ export default class Container {
    * Gets the services after waiting for its dependencies
    */
   private async getServiceFromDefinition(definition: Definition, satisfying: string): Promise<any> {
-    let resolvedDependencies = await Promise.all(
+    const resolvedDependencies = await Promise.all(
       definition.dependencies.map(async dependency => this.get(dependency, satisfying))
     );
 
     try {
-      var dependency = await definition.f.apply(definition.f, resolvedDependencies);
+      const dependency = await definition.f.apply(definition.f, resolvedDependencies);
+      return this.decorateService(dependency, definition);
     } catch (e) {
       throw new Error('Trouble getting ' + definition.name + ': ' + e);
     }
-
-    return this.decorateService(dependency, definition);
   }
 
   /**
@@ -103,9 +105,7 @@ export default class Container {
    * Gets mutliple services at once
    */
   public async getMatching(services: string[]): Promise<Array<any>> {
-    return Promise.all(
-      services.map(async name => this.get(name))
-    );
+    return Promise.all(services.map(async name => this.get(name)));
   }
 
   /**
