@@ -37,14 +37,14 @@ container.registerService('config', () => config);
 // register database which depends on config
 container.registerService(
   'db',
-  new Database(config.DB_CONNECTION_STRING),
+  (config: Config) => new Database(config.DB_CONNECTION_STRING),
   ['config']
 );
 
 // services can be returned with promises as well if they don't lazily connect for you
 container.registerService(
   'cache',
-  (config) => {
+  (config: Config) => {
     const redis = new Redis(config.CACHE_REDIS_HOST, config.CACHE_REDIS_PORT);
     return redis.connect(connection => {
       return new Cache(new RedisCacheBackend(redis));
